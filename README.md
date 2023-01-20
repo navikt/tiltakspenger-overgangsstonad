@@ -1,4 +1,4 @@
-tiltakspenger
+tiltakspenger-overgangsstonad
 ================
 
 Innhenter informasjon om overgangsstønad for en søker av tiltakspenger.
