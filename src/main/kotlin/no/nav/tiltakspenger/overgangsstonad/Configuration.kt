@@ -28,28 +28,28 @@ object Configuration {
     private val localProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.LOCAL.toString(),
-            "EF_SAK_URL" to "",
-            "EF_SAK_SCOPE" to "api://localhost:/.default",
+            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
+            "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         )
     )
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "EF_SAK_URL" to "",
-            "EF_SAK_SCOPE" to "",
+            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
+            "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         )
     )
     private val prodProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.PROD.toString(),
-            "EF_SAK_URL" to "",
-            "EF_SAK_SCOPE" to "",
+            "EF_SAK_URL" to "https://familie-ef-sak.intern.nav.no",
+            "EF_SAK_SCOPE" to "api://prod-gcp.teamfamilie.familie-ef-sak/.default",
         )
     )
 
     private fun config() = when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getProperty("NAIS_CLUSTER_NAME")) {
-        "dev-fss" -> systemProperties() overriding EnvironmentVariables overriding devProps overriding defaultProps
-        "prod-fss" -> systemProperties() overriding EnvironmentVariables overriding prodProps overriding defaultProps
+        "dev-gcp" -> systemProperties() overriding EnvironmentVariables overriding devProps overriding defaultProps
+        "prod-gcp" -> systemProperties() overriding EnvironmentVariables overriding prodProps overriding defaultProps
         else -> systemProperties() overriding EnvironmentVariables overriding localProps overriding defaultProps
     }
 
