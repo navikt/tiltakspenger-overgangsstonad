@@ -45,5 +45,4 @@ data class OvergangsstønadResponseData(
     val stacktrace: String
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class OvergangsstønadResponse(val data: OvergangsstønadResponseData)
