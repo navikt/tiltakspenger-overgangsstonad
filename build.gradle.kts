@@ -1,5 +1,8 @@
 val javaVersion = JavaVersion.VERSION_17
 val mockkVersion = "1.13.3"
+val ktorVersion = "2.2.2"
+val jacksonVersion = "2.14.1"
+val kotlinxCoroutinesVersion = "1.6.4"
 
 plugins {
     application
@@ -22,8 +25,21 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:7.2")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
     implementation("org.jetbrains:annotations:24.0.0")
-    // implementation("com.github.navikt:rapids-and-rivers:2022112407251669271100.df879df951cf")
+    implementation("com.github.navikt:rapids-and-rivers:2022122311551671792919.2bdd972d7bdb")
     implementation("com.natpryce:konfig:1.6.10.0")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-http:$ktorVersion")
+    implementation("io.ktor:ktor-serialization:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+    implementation("io.ktor:ktor-utils:$ktorVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
 
     testImplementation(platform("org.junit:junit-bom:5.9.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
