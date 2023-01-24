@@ -1,6 +1,5 @@
 package no.nav.tiltakspenger.overgangsstonad.efsak
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
