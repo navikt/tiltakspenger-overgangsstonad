@@ -9,15 +9,40 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import no.nav.tiltakspenger.overgangsstonad.httpClientGeneric
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 internal class EfSakClientTest {
+    @Language("JSON")
+    val personHarOvergangsstønad = """{
+        "data": {
+          "perioder": [
+            {"personIdent":"123","fomDato":"2025-01-01","tomDato":"2025-01-10","datakilde":"kilde"}
+          ],
+          "status":"test",
+          "melding":"test",
+          "frontendFeilmelding":"test",
+          "stacktrace":"test"
+        }
+    }""".trimMargin()
+
+    @Language("JSON")
+    val personHarIkkeOvergangsstønad = """{
+        "data": {
+          "perioder": [],
+          "status":"test",
+          "melding":"test",
+          "frontendFeilmelding":"test",
+          "stacktrace":"test"
+        }
+      }""".trimMargin()
+
     @Test
     fun `EF Sak svarer OK og personen har overgangsstønad`() {
         val mockEngine = MockEngine {
             respond(
-                content = """{"data":{"perioder":[{"personIdent":"123","fomDato":"2025-01-01","tomDato":"2025-01-10","datakilde":"kilde"}],"status":"test","melding":"test","frontendFeilmelding":"test","stacktrace":"test"}}""".trimMargin(),
+                content = personHarOvergangsstønad,
                 status = HttpStatusCode.OK,
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
@@ -36,7 +61,7 @@ internal class EfSakClientTest {
     fun `EF Sak svarer 200 og personen har ikke overgangsstønad`() {
         val mockEngine = MockEngine {
             respond(
-                content = """{"data":{"perioder":[],"status":"test","melding":"test","frontendFeilmelding":"test","stacktrace":"test"}}""".trimMargin(),
+                content = personHarIkkeOvergangsstønad,
                 status = HttpStatusCode.OK,
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )

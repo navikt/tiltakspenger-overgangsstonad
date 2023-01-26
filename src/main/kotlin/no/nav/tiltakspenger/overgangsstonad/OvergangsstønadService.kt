@@ -11,7 +11,10 @@ import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 
-class OvergangsstønadService(rapidsConnection: RapidsConnection, private val efSakClient: EfSakClient) : River.PacketListener {
+class OvergangsstønadService(
+    rapidsConnection: RapidsConnection,
+    private val efSakClient: EfSakClient
+) : River.PacketListener {
     private val log = KotlinLogging.logger {}
     private val secureLog = KotlinLogging.logger("tjenestekall")
 
