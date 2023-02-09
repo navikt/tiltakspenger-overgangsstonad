@@ -49,7 +49,6 @@ internal class OvergangsstønadServiceTest {
                 data = OvergangsstønadResponseData(
                     perioder = listOf(
                         OvergangsstønadPeriode(
-                            personIdent = ident,
                             fomDato = "2025-01-01",
                             tomDato = "2025-01-10",
                             datakilde = "test"
@@ -65,12 +64,11 @@ internal class OvergangsstønadServiceTest {
         OvergangsstønadService(testRapid, efsakClient)
         testRapid.sendTestMessage(behov)
         with(testRapid.inspektør) {
-            val løsning = this.message(0)["@løsning"]
+            val løsning = this.message(0)["@løsning.overgangsstønad"]
             Assertions.assertEquals(1, size)
             Assertions.assertEquals(1, løsning["perioder"].size())
             Assertions.assertEquals("\"2025-01-01\"", løsning["perioder"].get(0)["fomDato"].toString())
             Assertions.assertEquals("\"2025-01-10\"", løsning["perioder"].get(0)["tomDato"].toString())
-            Assertions.assertEquals("\"${ident}\"", løsning["perioder"].get(0)["personIdent"].toString())
             Assertions.assertEquals("\"test\"", løsning["perioder"].get(0)["datakilde"].toString())
         }
     }

@@ -30,7 +30,6 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
 }
 
 data class OvergangsstønadPeriode(
-    val personIdent: String,
     val fomDato: String,
     val tomDato: String,
     val datakilde: String

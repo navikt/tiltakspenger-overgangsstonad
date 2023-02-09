@@ -53,9 +53,8 @@ class OvergangsstønadService(
                 }
                 log.info { "Fikk svar fra Efsak. Sjekk securelog for detaljer" }
                 secureLog.info { response }
-                packet["@løsning"] = mapOf(
+                packet["@løsning.overgangsstønad"] = mapOf(
                     "perioder" to response.data.perioder,
-                    "ident" to ident,
                 )
                 loggVedUtgang(packet)
                 context.publish(ident, packet.toJson())
