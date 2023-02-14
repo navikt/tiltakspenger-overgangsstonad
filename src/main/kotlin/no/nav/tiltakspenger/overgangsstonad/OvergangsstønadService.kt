@@ -13,7 +13,7 @@ import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 
 class OvergangsstønadService(
     rapidsConnection: RapidsConnection,
-    private val efSakClient: EfSakClient
+    private val efSakClient: EfSakClient,
 ) : River.PacketListener {
     private val log = KotlinLogging.logger {}
     private val secureLog = KotlinLogging.logger("tjenestekall")
@@ -36,7 +36,7 @@ class OvergangsstønadService(
             loggVedInngang(packet)
             withLoggingContext(
                 "id" to packet["@id"].asText(),
-                "behovId" to packet["@behovId"].asText()
+                "behovId" to packet["@behovId"].asText(),
             ) {
                 val behovId = packet["@behovId"].asText()
                 val ident = packet["ident"].asText()
@@ -48,7 +48,7 @@ class OvergangsstønadService(
                         ident = ident,
                         fom = fom,
                         tom = tom,
-                        behovId = behovId
+                        behovId = behovId,
                     )
                 }
                 log.info { "Fikk svar fra Efsak. Sjekk securelog for detaljer" }
@@ -68,12 +68,12 @@ class OvergangsstønadService(
         log.info(
             "løser overgangsstønad-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
-            StructuredArguments.keyValue("behovId", packet["@behovId"].asText())
+            StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
         secureLog.info(
             "løser overgangsstønad-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
-            StructuredArguments.keyValue("behovId", packet["@behovId"].asText())
+            StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
         secureLog.debug { "mottok melding: ${packet.toJson()}" }
     }
@@ -82,12 +82,12 @@ class OvergangsstønadService(
         log.info(
             "har løst overgangsstønad-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
-            StructuredArguments.keyValue("behovId", packet["@behovId"].asText())
+            StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
         secureLog.info(
             "har løst overgangsstønad-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
-            StructuredArguments.keyValue("behovId", packet["@behovId"].asText())
+            StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
         secureLog.debug { "publiserer melding: ${packet.toJson()}" }
     }
@@ -101,7 +101,7 @@ class OvergangsstønadService(
             "feil \"${ex.message}\" ved behandling av overgangsstønad-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
             StructuredArguments.keyValue("packet", packet.toJson()),
-            ex
+            ex,
         )
     }
 }

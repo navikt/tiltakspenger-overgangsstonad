@@ -51,15 +51,15 @@ internal class OvergangsstønadServiceTest {
                         OvergangsstønadPeriode(
                             fomDato = "2025-01-01",
                             tomDato = "2025-01-10",
-                            datakilde = "test"
-                        )
+                            datakilde = "test",
+                        ),
                     ),
                     melding = "test",
                     frontendFeilmelding = "test",
                     status = "test",
-                    stacktrace = "test"
-                )
-            )
+                    stacktrace = "test",
+                ),
+            ),
         )
         OvergangsstønadService(testRapid, efsakClient)
         testRapid.sendTestMessage(behov)

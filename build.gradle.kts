@@ -9,7 +9,7 @@ plugins {
     kotlin("jvm") version "1.8.10"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
     id("ca.cutterslade.analyze") version "1.9.0"
-    id("com.diffplug.spotless") version "6.13.0"
+    id("com.diffplug.spotless") version "6.15.0"
 }
 
 repositories {
@@ -20,7 +20,7 @@ repositories {
 
 spotless {
     kotlin {
-        ktlint("0.45.2")
+        ktlint("0.48.2")
     }
 }
 

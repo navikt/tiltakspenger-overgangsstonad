@@ -18,7 +18,7 @@ fun main() {
     RapidApplication.create(Configuration.rapidsAndRivers).apply {
         OvergangsstønadService(
             rapidsConnection = this,
-            efSakClient = EfSakClient(httpClientCIO(), tokenProvider::getToken)
+            efSakClient = EfSakClient(httpClientCIO(), tokenProvider::getToken),
         )
         register(object : RapidsConnection.StatusListener {
             override fun onStartup(rapidsConnection: RapidsConnection) {

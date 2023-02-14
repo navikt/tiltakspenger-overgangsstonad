@@ -25,8 +25,8 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
                 OvergangsstønadRequestBody(
                     personIdent = ident,
                     fomDato = fom,
-                    tomDato = tom
-                )
+                    tomDato = tom,
+                ),
             )
         }.body()
 }
@@ -34,7 +34,7 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
 data class OvergangsstønadPeriode(
     val fomDato: String,
     val tomDato: String,
-    val datakilde: String
+    val datakilde: String,
 )
 
 data class OvergangsstønadResponseData(
@@ -42,7 +42,7 @@ data class OvergangsstønadResponseData(
     val status: String,
     val melding: String,
     var frontendFeilmelding: String,
-    val stacktrace: String
+    val stacktrace: String,
 )
 
 data class OvergangsstønadResponse(val data: OvergangsstønadResponseData)

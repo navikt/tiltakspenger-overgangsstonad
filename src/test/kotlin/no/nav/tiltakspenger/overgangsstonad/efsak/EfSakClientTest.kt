@@ -46,7 +46,7 @@ internal class EfSakClientTest {
             respond(
                 content = personHarOvergangsstønad,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = httpClientGeneric(mockEngine)
@@ -65,7 +65,7 @@ internal class EfSakClientTest {
             respond(
                 content = personHarIkkeOvergangsstønad,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = httpClientGeneric(mockEngine)
@@ -82,7 +82,7 @@ internal class EfSakClientTest {
             respond(
                 content = """400 Bad Request""".trimMargin(),
                 status = HttpStatusCode.BadRequest,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = httpClientGeneric(mockEngine)
