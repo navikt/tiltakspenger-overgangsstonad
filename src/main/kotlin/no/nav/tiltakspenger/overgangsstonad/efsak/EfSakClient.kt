@@ -2,12 +2,14 @@ package no.nav.tiltakspenger.overgangsstonad.efsak
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.accept
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 
 internal class OvergangsstønadRequestBody(val personIdent: String, val fomDato: String, val tomDato: String)
@@ -16,19 +18,34 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
     private val config = no.nav.tiltakspenger.overgangsstonad.Configuration.EfsakConfig()
 
     suspend fun hentOvergangsstønad(ident: String, fom: String, tom: String, behovId: String): OvergangsstønadResponse =
-        client.post(urlString = config.efsakUrl) {
-            bearerAuth(getToken())
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            header("Nav-Call-Id", behovId)
-            setBody(
-                OvergangsstønadRequestBody(
-                    personIdent = ident,
-                    fomDato = fom,
-                    tomDato = tom,
-                ),
+        try {
+            val response = client.post(urlString = config.efsakUrl) {
+                bearerAuth(getToken())
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+                header("Nav-Call-Id", behovId)
+                setBody(
+                    OvergangsstønadRequestBody(
+                        personIdent = ident,
+                        fomDato = fom,
+                        tomDato = tom,
+                    ),
+                )
+            }
+            OvergangsstønadResponse(
+                data = response.body(),
+                feil = null,
             )
-        }.body()
+        } catch (e: ClientRequestException) {
+            if (e.response.status == HttpStatusCode.NotFound) {
+                OvergangsstønadResponse(
+                    data = null,
+                    feil = Feilmelding.IkkeFunnet,
+                )
+            } else {
+                throw (e)
+            }
+        }
 }
 
 data class OvergangsstønadPeriode(
@@ -45,4 +62,11 @@ data class OvergangsstønadResponseData(
     val stacktrace: String,
 )
 
-data class OvergangsstønadResponse(val data: OvergangsstønadResponseData)
+data class OvergangsstønadResponse(
+    val data: OvergangsstønadResponseData?,
+    val feil: Feilmelding?,
+)
+
+enum class Feilmelding(val message: String) {
+    IkkeFunnet("Ukjent ident"),
+}
