@@ -22,7 +22,7 @@ object Configuration {
         "AZURE_APP_CLIENT_ID" to System.getenv("AZURE_APP_CLIENT_ID"),
         "AZURE_APP_CLIENT_SECRET" to System.getenv("AZURE_APP_CLIENT_SECRET"),
         "AZURE_APP_WELL_KNOWN_URL" to System.getenv("AZURE_APP_WELL_KNOWN_URL"),
-        "HTTP_PROXY" to System.getenv("HTTP_PROXY")
+        "HTTP_PROXY" to System.getenv("HTTP_PROXY"),
     )
     private val defaultProps = ConfigurationMap(rapidsAndRivers + otherDefaultProperties)
     private val localProps = ConfigurationMap(
@@ -30,21 +30,21 @@ object Configuration {
             "application.profile" to Profile.LOCAL.toString(),
             "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
-        )
+        ),
     )
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
             "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
-        )
+        ),
     )
     private val prodProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.PROD.toString(),
             "EF_SAK_URL" to "https://familie-ef-sak.intern.nav.no",
             "EF_SAK_SCOPE" to "api://prod-gcp.teamfamilie.familie-ef-sak/.default",
-        )
+        ),
     )
 
     private fun config() = when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getProperty("NAIS_CLUSTER_NAME")) {
@@ -54,10 +54,10 @@ object Configuration {
     }
 
     data class OauthConfig(
-        val scope: String = config()[Key("OVERGANGSSTONAD_SCOPE", stringType)],
+        val scope: String = config()[Key("EF_SAK_SCOPE", stringType)],
         val clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
         val clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
-        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)]
+        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
     )
 
     @JvmInline
