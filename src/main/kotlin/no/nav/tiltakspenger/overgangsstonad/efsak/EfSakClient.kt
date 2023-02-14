@@ -21,11 +21,13 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
             header("Nav-Call-Id", behovId)
-            setBody(OvergangsstønadRequestBody(
-                personIdent = ident,
-                fomDato = fom,
-                tomDato = tom
-            ))
+            setBody(
+                OvergangsstønadRequestBody(
+                    personIdent = ident,
+                    fomDato = fom,
+                    tomDato = tom
+                )
+            )
         }.body()
 }
 

@@ -25,7 +25,8 @@ internal class EfSakClientTest {
           "frontendFeilmelding":"test",
           "stacktrace":"test"
         }
-    }""".trimMargin()
+    }
+    """.trimMargin()
 
     @Language("JSON")
     val personHarIkkeOvergangsstønad = """{
@@ -36,7 +37,8 @@ internal class EfSakClientTest {
           "frontendFeilmelding":"test",
           "stacktrace":"test"
         }
-      }""".trimMargin()
+      }
+    """.trimMargin()
 
     @Test
     fun `EF Sak svarer OK og personen har overgangsstønad`() {

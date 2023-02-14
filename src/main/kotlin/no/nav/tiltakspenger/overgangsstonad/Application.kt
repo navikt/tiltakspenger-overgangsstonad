@@ -3,8 +3,8 @@ package no.nav.tiltakspenger.overgangsstonad
 import mu.KotlinLogging
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.helse.rapids_rivers.RapidsConnection
-import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 import no.nav.tiltakspenger.overgangsstonad.auth.AzureTokenProvider
+import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 
 fun main() {
     System.setProperty("logback.configurationFile", "egenLogback.xml")

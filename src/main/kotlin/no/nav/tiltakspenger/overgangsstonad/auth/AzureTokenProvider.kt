@@ -7,8 +7,8 @@ import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.http.Parameters
-import no.nav.tiltakspenger.overgangsstonad.Configuration
 import kotlinx.coroutines.runBlocking
+import no.nav.tiltakspenger.overgangsstonad.Configuration
 
 class AzureTokenProvider(private val httpClient: HttpClient) {
     private val config = Configuration.OauthConfig()
