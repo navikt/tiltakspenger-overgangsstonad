@@ -18,10 +18,16 @@ class OvergangsstønadService(
     private val log = KotlinLogging.logger {}
     private val secureLog = KotlinLogging.logger("tjenestekall")
 
+    companion object {
+        internal object BEHOV {
+            const val OVERGANGSSTØNAD = "overgangsstønad"
+        }
+    }
+
     init {
         River(rapidsConnection).apply {
             validate {
-                it.demandAllOrAny("@behov", listOf("overgangsstønad"))
+                it.demandAllOrAny("@behov", listOf(BEHOV.OVERGANGSSTØNAD))
                 it.forbid("@løsning")
                 it.requireKey("@id", "@behovId")
                 it.requireKey("ident")
@@ -56,8 +62,8 @@ class OvergangsstønadService(
 //                packet["@løsning.overgangsstønad"] = mapOf(
 //                    "perioder" to response.data?.perioder,
 //                )
-                packet["@løsning.overgangsstønad"] = mapOf(
-                    "respons" to response,
+                packet["@løsning"] = mapOf(
+                    BEHOV.OVERGANGSSTØNAD to response,
                 )
                 loggVedUtgang(packet)
                 context.publish(ident, packet.toJson())
