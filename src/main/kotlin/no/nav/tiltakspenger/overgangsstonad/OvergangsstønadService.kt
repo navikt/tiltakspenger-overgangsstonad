@@ -9,9 +9,9 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
-import no.nav.tiltakspenger.libs.overgangsstønad.OvergangsstønadDTO
-import no.nav.tiltakspenger.libs.overgangsstønad.OvergangsstønadPeriodeDTO
-import no.nav.tiltakspenger.libs.overgangsstønad.OvergangsstønadResponsDTO
+import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadDTO
+import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadPeriodeDTO
+import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadResponsDTO
 import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 
 class OvergangsstønadService(
@@ -69,8 +69,6 @@ class OvergangsstønadService(
                                 datakilde = it.datakilde,
                             )
                         },
-                        datoUfor = null,
-                        virkDato = null,
                     ),
                     feil = null,
                 )
