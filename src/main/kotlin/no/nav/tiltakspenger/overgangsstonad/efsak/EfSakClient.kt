@@ -11,15 +11,23 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import mu.KotlinLogging
 
 internal class OvergangsstønadRequestBody(val personIdent: String, val fomDato: String, val tomDato: String)
 
 class EfSakClient(private val client: HttpClient, private val getToken: suspend () -> String) {
     private val config = no.nav.tiltakspenger.overgangsstonad.Configuration.EfsakConfig()
+    private val secureLog = KotlinLogging.logger("tjenestekall")
 
-    suspend fun hentOvergangsstønad(ident: String, fom: String, tom: String, behovId: String): OvergangsstønadResponse =
+    suspend fun hentOvergangsstønad(
+        ident: String,
+        fom: String,
+        tom: String,
+        behovId: String,
+    ): OvergangsstønadResponseData =
         try {
-            val response = client.post(urlString = config.efsakUrl) {
+            secureLog.info { "Kaller ef url: ${config.efsakUrl} med ident: $ident, fom : $fom, tom: $tom" }
+            client.post(urlString = config.efsakUrl) {
                 bearerAuth(getToken())
                 contentType(ContentType.Application.Json)
                 accept(ContentType.Application.Json)
@@ -31,16 +39,18 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
                         tomDato = tom,
                     ),
                 )
-            }
-            OvergangsstønadResponse(
-                data = response.body(),
-                feil = null,
-            )
+            }.body<OvergangsstønadResponseData>()
+                .also {
+                    secureLog.info { "respons fra ef $it" }
+                }
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.NotFound) {
-                OvergangsstønadResponse(
-                    data = null,
-                    feil = Feilmelding.IkkeFunnet,
+                OvergangsstønadResponseData(
+                    perioder = emptyList(),
+                    status = "",
+                    melding = "",
+                    frontendFeilmelding = "",
+                    stacktrace = "",
                 )
             } else {
                 throw (e)
@@ -61,12 +71,3 @@ data class OvergangsstønadResponseData(
     var frontendFeilmelding: String,
     val stacktrace: String,
 )
-
-data class OvergangsstønadResponse(
-    val data: OvergangsstønadResponseData?,
-    val feil: Feilmelding?,
-)
-
-enum class Feilmelding(val message: String) {
-    IkkeFunnet("Ukjent ident"),
-}

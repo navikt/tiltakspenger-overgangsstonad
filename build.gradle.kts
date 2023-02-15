@@ -3,6 +3,7 @@ val mockkVersion = "1.13.4"
 val ktorVersion = "2.2.3"
 val jacksonVersion = "2.14.2"
 val kotlinxCoroutinesVersion = "1.6.4"
+val felleslibVersion = "0.0.26"
 
 plugins {
     application
@@ -32,6 +33,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:7.2")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("org.jetbrains:annotations:24.0.0")
+    implementation("com.github.navikt.tiltakspenger-libs:overgangsstonad-dtos:$felleslibVersion")
     implementation("com.github.navikt:rapids-and-rivers:2022122311551671792919.2bdd972d7bdb")
     implementation("com.natpryce:konfig:1.6.10.0")
     implementation("io.ktor:ktor-client-core:$ktorVersion")

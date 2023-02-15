@@ -9,6 +9,9 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
+import no.nav.tiltakspenger.libs.overgangsstønad.OvergangsstønadDTO
+import no.nav.tiltakspenger.libs.overgangsstønad.OvergangsstønadPeriodeDTO
+import no.nav.tiltakspenger.libs.overgangsstønad.OvergangsstønadResponsDTO
 import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 
 class OvergangsstønadService(
@@ -49,7 +52,7 @@ class OvergangsstønadService(
                 secureLog.debug { "mottok ident $ident" }
                 val fom = packet["fom"].asText()
                 val tom = packet["tom"].asText()
-                val response = runBlocking(MDCContext()) {
+                val responseFraEf = runBlocking(MDCContext()) {
                     efSakClient.hentOvergangsstønad(
                         ident = ident,
                         fom = fom,
@@ -57,11 +60,22 @@ class OvergangsstønadService(
                         behovId = behovId,
                     )
                 }
+                val response = OvergangsstønadResponsDTO(
+                    overgangsstønad = OvergangsstønadDTO(
+                        perioder = responseFraEf.perioder.map {
+                            OvergangsstønadPeriodeDTO(
+                                fomDato = it.fomDato,
+                                tomDato = it.tomDato,
+                                datakilde = it.datakilde,
+                            )
+                        },
+                        datoUfor = null,
+                        virkDato = null,
+                    ),
+                    feil = null,
+                )
                 log.info { "Fikk svar fra Efsak. Sjekk securelog for detaljer" }
                 secureLog.info { response }
-//                packet["@løsning.overgangsstønad"] = mapOf(
-//                    "perioder" to response.data?.perioder,
-//                )
                 packet["@løsning"] = mapOf(
                     BEHOV.OVERGANGSSTØNAD to response,
                 )
