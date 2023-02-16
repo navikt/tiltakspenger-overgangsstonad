@@ -18,6 +18,7 @@ internal class OvergangsstønadRequestBody(val personIdent: String)
 class EfSakClient(private val client: HttpClient, private val getToken: suspend () -> String) {
     private val config = no.nav.tiltakspenger.overgangsstonad.Configuration.EfsakConfig()
     private val secureLog = KotlinLogging.logger("tjenestekall")
+    private val token = getToken
 
     suspend fun hentOvergangsstønad(
         ident: String,
@@ -26,7 +27,7 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
         behovId: String,
     ): OvergangsstønadResponse =
         try {
-            secureLog.info { "Kaller ef : ${config.efsakUrl} $ident $fom $tom $getToken" }
+            secureLog.info { "Kaller ef : ${config.efsakUrl} $ident $fom $tom $token" }
             val response = client.post(urlString = config.efsakUrl) {
                 bearerAuth(getToken())
                 contentType(ContentType.Application.Json)
@@ -46,11 +47,11 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
                 OvergangsstønadResponse(
                     data = OvergangsstønadResponseData(
                         perioder = emptyList(),
-                        status = "",
-                        melding = "",
-                        frontendFeilmelding = "",
-                        stacktrace = "",
                     ),
+                    status = "",
+                    melding = "",
+                    frontendFeilmelding = "",
+                    stacktrace = "",
                 )
             } else {
                 throw (e)
@@ -67,12 +68,13 @@ data class OvergangsstønadPeriode(
 
 data class OvergangsstønadResponseData(
     val perioder: List<OvergangsstønadPeriode>,
-    val status: String,
-    val melding: String,
-    var frontendFeilmelding: String,
-    val stacktrace: String,
+
 )
 
 data class OvergangsstønadResponse(
     val data: OvergangsstønadResponseData,
+    val status: String,
+    val melding: String,
+    var frontendFeilmelding: String,
+    val stacktrace: String,
 )
