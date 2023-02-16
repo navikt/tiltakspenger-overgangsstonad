@@ -13,7 +13,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import mu.KotlinLogging
 
-internal class OvergangsstønadRequestBody(val personIdent: String, val fomDato: String, val tomDato: String)
+internal class OvergangsstønadRequestBody(val personIdent: String)
 
 class EfSakClient(private val client: HttpClient, private val getToken: suspend () -> String) {
     private val config = no.nav.tiltakspenger.overgangsstonad.Configuration.EfsakConfig()
@@ -26,7 +26,7 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
         behovId: String,
     ): OvergangsstønadResponseData =
         try {
-            secureLog.info { "Kaller ef url: ${config.efsakUrl} med ident: $ident, fom : $fom, tom: $tom" }
+            secureLog.info { "Kaller ef : ${config.efsakUrl} $ident $fom $tom $getToken()" }
             val response = client.post(urlString = config.efsakUrl) {
                 bearerAuth(getToken())
                 contentType(ContentType.Application.Json)
@@ -35,12 +35,11 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
                 setBody(
                     OvergangsstønadRequestBody(
                         personIdent = ident,
-                        fomDato = fom,
-                        tomDato = tom,
                     ),
                 )
             }
-            secureLog.info { "Resonse fra ef : $response" }
+            val json: String = response.body()
+            secureLog.info { "Resonse fra ef : $json" }
             response.body()
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.NotFound) {
