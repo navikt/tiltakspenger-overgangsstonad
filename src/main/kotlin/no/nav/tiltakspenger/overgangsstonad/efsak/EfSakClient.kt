@@ -38,9 +38,9 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
                     ),
                 )
             }
-            val json: String = response.body()
-            secureLog.info { "Resonse fra ef : $json" }
-            response.body()
+            response.body<OvergangsstønadResponse>().also {
+                secureLog.info { "Resonse fra ef : $it" }
+            }
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.NotFound) {
                 OvergangsstønadResponse(
