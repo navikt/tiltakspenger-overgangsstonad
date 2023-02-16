@@ -27,7 +27,7 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
     ): OvergangsstønadResponseData =
         try {
             secureLog.info { "Kaller ef url: ${config.efsakUrl} med ident: $ident, fom : $fom, tom: $tom" }
-            client.post(urlString = config.efsakUrl) {
+            val response = client.post(urlString = config.efsakUrl) {
                 bearerAuth(getToken())
                 contentType(ContentType.Application.Json)
                 accept(ContentType.Application.Json)
@@ -39,10 +39,9 @@ class EfSakClient(private val client: HttpClient, private val getToken: suspend 
                         tomDato = tom,
                     ),
                 )
-            }.body<OvergangsstønadResponseData>()
-                .also {
-                    secureLog.info { "respons fra ef $it" }
-                }
+            }
+            secureLog.info { "Resonse fra ef : $response" }
+            response.body()
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.NotFound) {
                 OvergangsstønadResponseData(
