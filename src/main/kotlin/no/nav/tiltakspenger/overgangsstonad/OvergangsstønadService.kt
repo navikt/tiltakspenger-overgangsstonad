@@ -13,6 +13,7 @@ import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadDTO
 import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadPeriodeDTO
 import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadResponsDTO
 import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
+import java.time.LocalDate
 
 class OvergangsstønadService(
     rapidsConnection: RapidsConnection,
@@ -34,8 +35,8 @@ class OvergangsstønadService(
                 it.forbid("@løsning")
                 it.requireKey("@id", "@behovId")
                 it.requireKey("ident")
-//                it.requireKey("fom")
-//                it.requireKey("tom")
+                it.requireKey("fom")
+                it.requireKey("tom")
             }
         }.register(this)
     }
@@ -49,13 +50,37 @@ class OvergangsstønadService(
             ) {
                 val behovId = packet["@behovId"].asText()
                 val ident = packet["ident"].asText()
-//                val fom = packet["fom"].asText()
-//                val tom = packet["tom"].asText()
+                val fom: String = packet["fom"].asText("1970-01-01")
+                val tom: String = packet["tom"].asText("9999-12-31")
+
+                val fomFixed = try {
+                    val tempFom: LocalDate = LocalDate.parse(fom)
+                    if (tempFom == LocalDate.MIN) {
+                        LocalDate.EPOCH
+                    } else {
+                        tempFom
+                    }
+                } catch (e: Exception) {
+                    log.warn("Klarte ikke å parse fom $fom", e)
+                    LocalDate.EPOCH
+                }
+
+                val tomFixed = try {
+                    val tempTom: LocalDate = LocalDate.parse(tom)
+                    if (tempTom == LocalDate.MAX) {
+                        LocalDate.of(9999, 12, 31)
+                    } else {
+                        tempTom
+                    }
+                } catch (e: Exception) {
+                    log.warn("Klarte ikke å parse tom $tom", e)
+                    LocalDate.of(9999, 12, 31)
+                }
                 val responseFraEf = runBlocking(MDCContext()) {
                     efSakClient.hentOvergangsstønad(
                         ident = ident,
-//                        fom = fom,
-//                        tom = tom,
+                        fom = fomFixed,
+                        tom = tomFixed,
                         behovId = behovId,
                     )
                 }

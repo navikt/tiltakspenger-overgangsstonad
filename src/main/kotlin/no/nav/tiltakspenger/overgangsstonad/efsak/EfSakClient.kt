@@ -15,8 +15,13 @@ import io.ktor.http.contentType
 import no.nav.tiltakspenger.overgangsstonad.Configuration
 import no.nav.tiltakspenger.overgangsstonad.defaultHttpClient
 import no.nav.tiltakspenger.overgangsstonad.defaultObjectMapper
+import java.time.LocalDate
 
-internal class OvergangsstønadRequestBody(val personIdent: String)
+internal class OvergangsstønadRequestBody(
+    val personIdent: String,
+    val fom: LocalDate,
+    val tom: LocalDate,
+)
 
 class EfSakClient(
     private val config: EFClientConfig = Configuration.efClientConfig(),
@@ -32,12 +37,10 @@ class EfSakClient(
         const val navCallIdHeader = "Nav-Call-Id"
     }
 
-//    private val secureLog = KotlinLogging.logger("tjenestekall")
-
     suspend fun hentOvergangsstønad(
         ident: String,
-//        fom: String,
-//        tom: String,
+        fom: LocalDate,
+        tom: LocalDate,
         behovId: String,
     ): OvergangsstønadResponse {
         val httpResponse =
@@ -49,6 +52,8 @@ class EfSakClient(
                 setBody(
                     OvergangsstønadRequestBody(
                         personIdent = ident,
+                        fom = fom,
+                        tom = tom,
                     ),
                 )
             }.execute()
@@ -81,7 +86,6 @@ data class OvergangsstønadPeriode(
 
 data class OvergangsstønadResponseData(
     val perioder: List<OvergangsstønadPeriode>,
-
 )
 
 data class OvergangsstønadResponse(
