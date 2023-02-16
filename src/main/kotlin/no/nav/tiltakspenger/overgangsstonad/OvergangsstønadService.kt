@@ -49,7 +49,6 @@ class OvergangsstønadService(
             ) {
                 val behovId = packet["@behovId"].asText()
                 val ident = packet["ident"].asText()
-                secureLog.debug { "mottok ident $ident" }
                 val fom = packet["fom"].asText()
                 val tom = packet["tom"].asText()
                 val responseFraEf = runBlocking(MDCContext()) {

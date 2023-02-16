@@ -28,14 +28,14 @@ object Configuration {
     private val localProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.LOCAL.toString(),
-            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
+            "EF_SAK_URL" to "http://familie-ef-sak/api/ekstern/perioder",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         ),
     )
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
+            "EF_SAK_URL" to "http://familie-ef-sak/api/ekstern/perioder",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         ),
     )
