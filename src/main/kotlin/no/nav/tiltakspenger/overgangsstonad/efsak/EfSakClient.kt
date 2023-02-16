@@ -18,7 +18,7 @@ internal class OvergangsstønadRequestBody(val personIdent: String)
 class EfSakClient(private val client: HttpClient, private val getToken: suspend () -> String) {
     private val config = no.nav.tiltakspenger.overgangsstonad.Configuration.EfsakConfig()
     private val secureLog = KotlinLogging.logger("tjenestekall")
-    private val token = getToken
+    private val token = getToken.toString()
 
     suspend fun hentOvergangsstønad(
         ident: String,
@@ -75,6 +75,6 @@ data class OvergangsstønadResponse(
     val data: OvergangsstønadResponseData,
     val status: String,
     val melding: String,
-    var frontendFeilmelding: String,
-    val stacktrace: String,
+    var frontendFeilmelding: String?,
+    val stacktrace: String?,
 )
