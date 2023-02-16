@@ -61,7 +61,7 @@ class OvergangsstønadService(
                 }
                 val response = OvergangsstønadResponsDTO(
                     overgangsstønad = OvergangsstønadDTO(
-                        perioder = responseFraEf.perioder.map {
+                        perioder = responseFraEf.data.perioder.map {
                             OvergangsstønadPeriodeDTO(
                                 fomDato = it.fomDato,
                                 tomDato = it.tomDato,
