@@ -14,11 +14,14 @@ fun main() {
         log.error { "Uncaught exception logget i securelog" }
         securelog.error(e) { e.message }
     }
-    val tokenProvider = AzureTokenProvider(httpClientMedProxy())
+    val tokenProvider = AzureTokenProvider()
+    val client = EfSakClient(
+        getToken = tokenProvider::getToken,
+    )
     RapidApplication.create(Configuration.rapidsAndRivers).apply {
         OvergangsstønadService(
             rapidsConnection = this,
-            efSakClient = EfSakClient(httpClientCIO(), tokenProvider::getToken),
+            efSakClient = client,
         )
         register(object : RapidsConnection.StatusListener {
             override fun onStartup(rapidsConnection: RapidsConnection) {

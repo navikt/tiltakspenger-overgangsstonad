@@ -6,6 +6,8 @@ import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
+import no.nav.tiltakspenger.overgangsstonad.auth.AzureTokenProvider
+import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
 
 object Configuration {
     val rapidsAndRivers = mapOf(
@@ -28,14 +30,14 @@ object Configuration {
     private val localProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.LOCAL.toString(),
-            "EF_SAK_URL" to "https://familie-ef-sak.intern.nav.no/api/ekstern/perioder",
+            "EF_SAK_URL" to "https://familie-ef-sak.intern.nav.no",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         ),
     )
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no/api/ekstern/perioder",
+            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         ),
     )
@@ -53,12 +55,27 @@ object Configuration {
         else -> systemProperties() overriding EnvironmentVariables overriding localProps overriding defaultProps
     }
 
-    data class OauthConfig(
-        val scope: String = config()[Key("EF_SAK_SCOPE", stringType)],
-        val clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
-        val clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
-        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
+//    data class OauthConfig(
+//        val scope: String = config()[Key("EF_SAK_SCOPE", stringType)],
+//        val clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
+//        val clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
+//        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
+//    )
+
+    fun oauthConfig(
+        scope: String = config()[Key("EF_SAK_SCOPE", stringType)],
+        clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
+        clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
+        wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
+    ) = AzureTokenProvider.OauthConfig(
+        scope = scope,
+        clientId = clientId,
+        clientSecret = clientSecret,
+        wellknownUrl = wellknownUrl,
     )
+
+    fun efClientConfig(baseUrl: String = config()[Key("EF_SAK_URL", stringType)]) =
+        EfSakClient.EFClientConfig(baseUrl = baseUrl)
 
     @JvmInline
     value class EfsakConfig(val efsakUrl: String = config()[Key("EF_SAK_URL", stringType)])

@@ -1,62 +1,75 @@
 package no.nav.tiltakspenger.overgangsstonad.efsak
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.request.accept
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.header
-import io.ktor.client.request.post
+import io.ktor.client.request.preparePost
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import mu.KotlinLogging
+import no.nav.tiltakspenger.overgangsstonad.Configuration
+import no.nav.tiltakspenger.overgangsstonad.defaultHttpClient
+import no.nav.tiltakspenger.overgangsstonad.defaultObjectMapper
 
 internal class OvergangsstønadRequestBody(val personIdent: String)
 
-class EfSakClient(private val client: HttpClient, private val getToken: suspend () -> String) {
-    private val config = no.nav.tiltakspenger.overgangsstonad.Configuration.EfsakConfig()
-    private val secureLog = KotlinLogging.logger("tjenestekall")
-    private val token = getToken.toString()
+class EfSakClient(
+    private val config: EFClientConfig = Configuration.efClientConfig(),
+    private val objectMapper: ObjectMapper = defaultObjectMapper(),
+    private val getToken: suspend () -> String,
+    engine: HttpClientEngine? = null,
+    private val httpClient: HttpClient = defaultHttpClient(
+        objectMapper = objectMapper,
+        engine = engine,
+    ),
+) {
+    companion object {
+        const val navCallIdHeader = "Nav-Call-Id"
+    }
+
+//    private val secureLog = KotlinLogging.logger("tjenestekall")
 
     suspend fun hentOvergangsstønad(
         ident: String,
-        fom: String,
-        tom: String,
+//        fom: String,
+//        tom: String,
         behovId: String,
-    ): OvergangsstønadResponse =
-        try {
-            secureLog.info { "Kaller ef : ${config.efsakUrl} $ident $fom $tom $token" }
-            val response = client.post(urlString = config.efsakUrl) {
+    ): OvergangsstønadResponse {
+        val httpResponse =
+            httpClient.preparePost("${config.baseUrl}/api/ekstern/perioder") {
+                header(navCallIdHeader, behovId)
                 bearerAuth(getToken())
-                contentType(ContentType.Application.Json)
                 accept(ContentType.Application.Json)
-                header("Nav-Call-Id", behovId)
+                contentType(ContentType.Application.Json)
                 setBody(
                     OvergangsstønadRequestBody(
                         personIdent = ident,
                     ),
                 )
-            }
-            response.body<OvergangsstønadResponse>().also {
-                secureLog.info { "Resonse fra ef : $it" }
-            }
-        } catch (e: ClientRequestException) {
-            if (e.response.status == HttpStatusCode.NotFound) {
-                OvergangsstønadResponse(
-                    data = OvergangsstønadResponseData(
-                        perioder = emptyList(),
-                    ),
-                    status = "",
-                    melding = "",
-                    frontendFeilmelding = "",
-                    stacktrace = "",
-                )
-            } else {
-                throw (e)
-            }
+            }.execute()
+        return when (httpResponse.status) {
+            HttpStatusCode.OK -> httpResponse.call.response.body()
+            HttpStatusCode.NotFound -> OvergangsstønadResponse(
+                data = OvergangsstønadResponseData(
+                    perioder = emptyList(),
+                ),
+                status = "",
+                melding = "",
+                frontendFeilmelding = null,
+                stacktrace = null,
+            )
+            else -> throw RuntimeException("error (responseCode=${httpResponse.status.value}) from Ef")
         }
+    }
+
+    data class EFClientConfig(
+        val baseUrl: String,
+    )
 }
 
 data class OvergangsstønadPeriode(

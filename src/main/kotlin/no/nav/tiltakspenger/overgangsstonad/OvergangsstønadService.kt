@@ -34,8 +34,8 @@ class OvergangsstønadService(
                 it.forbid("@løsning")
                 it.requireKey("@id", "@behovId")
                 it.requireKey("ident")
-                it.requireKey("fom")
-                it.requireKey("tom")
+//                it.requireKey("fom")
+//                it.requireKey("tom")
             }
         }.register(this)
     }
@@ -49,13 +49,13 @@ class OvergangsstønadService(
             ) {
                 val behovId = packet["@behovId"].asText()
                 val ident = packet["ident"].asText()
-                val fom = packet["fom"].asText()
-                val tom = packet["tom"].asText()
+//                val fom = packet["fom"].asText()
+//                val tom = packet["tom"].asText()
                 val responseFraEf = runBlocking(MDCContext()) {
                     efSakClient.hentOvergangsstønad(
                         ident = ident,
-                        fom = fom,
-                        tom = tom,
+//                        fom = fom,
+//                        tom = tom,
                         behovId = behovId,
                     )
                 }

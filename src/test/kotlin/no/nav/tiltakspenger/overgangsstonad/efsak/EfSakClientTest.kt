@@ -72,8 +72,6 @@ internal class EfSakClientTest {
 //                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
 //            )
 //        }
-//        val client = httpClientGeneric(mockEngine)
-//        val efSakClient = EfSakClient(client) { "token for testing" }
 //        assertThrows(ClientRequestException::class.java) {
 //            runTest { efSakClient.hentOvergangsstønad("ident", "fom", "tom", "behovId") }
 //        }
