@@ -9,7 +9,7 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
-import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadDTO
+import no.nav.tiltakspenger.libs.overgangsstonad.Feilmelding
 import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadPeriodeDTO
 import no.nav.tiltakspenger.libs.overgangsstonad.OvergangsstønadResponsDTO
 import no.nav.tiltakspenger.overgangsstonad.efsak.EfSakClient
@@ -84,18 +84,36 @@ class OvergangsstønadService(
                         behovId = behovId,
                     )
                 }
-                val response = OvergangsstønadResponsDTO(
-                    overgangsstønad = OvergangsstønadDTO(
-                        perioder = responseFraEf.data.perioder.map {
+                val response = when (responseFraEf.status) {
+                    "SUKSESS" -> OvergangsstønadResponsDTO(
+                        overgangsstønader = responseFraEf.data.perioder.map {
                             OvergangsstønadPeriodeDTO(
                                 fomDato = it.fomDato,
                                 tomDato = it.tomDato,
                                 datakilde = it.datakilde,
                             )
                         },
-                    ),
-                    feil = null,
-                )
+                        feil = null,
+                    )
+                    "FEILET" -> OvergangsstønadResponsDTO(
+                        overgangsstønader = null,
+                        feil = Feilmelding.Feilet,
+                    )
+                    "IKKE_HENTET" -> OvergangsstønadResponsDTO(
+                        overgangsstønader = null,
+                        feil = Feilmelding.IkkeHentet,
+                    )
+                    "IKKE_TILGANG" -> OvergangsstønadResponsDTO(
+                        overgangsstønader = null,
+                        feil = Feilmelding.IkkeTilgang,
+                    )
+                    "FUNKSJONELL_FEIL" -> OvergangsstønadResponsDTO(
+                        overgangsstønader = null,
+                        feil = Feilmelding.FunksjonellFeil,
+                    )
+                    else -> throw IllegalStateException("Ukjent status ${responseFraEf.status}")
+                }
+
                 log.info { "Fikk svar fra Efsak. Sjekk securelog for detaljer" }
                 secureLog.info { response }
                 packet["@løsning"] = mapOf(
