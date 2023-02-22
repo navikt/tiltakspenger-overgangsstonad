@@ -3,7 +3,7 @@ val mockkVersion = "1.13.4"
 val ktorVersion = "2.2.3"
 val jacksonVersion = "2.14.2"
 val kotlinxCoroutinesVersion = "1.6.4"
-val felleslibVersion = "0.0.29"
+val felleslibVersion = "0.0.30"
 
 plugins {
     application
@@ -55,6 +55,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-dsl-jvm:$mockkVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm:$kotlinxCoroutinesVersion")
+    testImplementation("org.skyscreamer:jsonassert:1.5.1")
 }
 
 configurations.all {

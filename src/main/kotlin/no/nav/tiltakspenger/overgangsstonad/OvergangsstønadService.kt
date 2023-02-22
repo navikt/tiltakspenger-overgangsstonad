@@ -88,8 +88,8 @@ class OvergangsstønadService(
                     "SUKSESS" -> OvergangsstønadResponsDTO(
                         overgangsstønader = responseFraEf.data.perioder.map {
                             OvergangsstønadPeriodeDTO(
-                                fomDato = it.fomDato,
-                                tomDato = it.tomDato,
+                                fom = it.fomDato,
+                                tom = it.tomDato,
                                 datakilde = it.datakilde,
                             )
                         },
