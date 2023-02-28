@@ -19,8 +19,8 @@ import java.time.LocalDate
 
 internal class OvergangsstønadRequestBody(
     val personIdent: String,
-    val fom: LocalDate,
-    val tom: LocalDate,
+    val fomDato: LocalDate,
+    val tomDato: LocalDate,
 )
 
 class EfSakClient(
@@ -52,8 +52,8 @@ class EfSakClient(
                 setBody(
                     OvergangsstønadRequestBody(
                         personIdent = ident,
-                        fom = fom,
-                        tom = tom,
+                        fomDato = fom,
+                        tomDato = tom,
                     ),
                 )
             }.execute()
