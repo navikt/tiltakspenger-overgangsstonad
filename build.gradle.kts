@@ -9,7 +9,7 @@ plugins {
     application
     kotlin("jvm") version "1.8.10"
     id("ca.cutterslade.analyze") version "1.9.0"
-    id("com.diffplug.spotless") version "6.15.0"
+    id("com.diffplug.spotless") version "6.16.0"
 }
 
 repositories {
