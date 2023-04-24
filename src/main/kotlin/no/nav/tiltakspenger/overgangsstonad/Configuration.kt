@@ -37,7 +37,7 @@ object Configuration {
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "EF_SAK_URL" to "https://familie-ef-sak.dev.intern.nav.no",
+            "EF_SAK_URL" to "https://familie-ef-sak.intern.dev.nav.no",
             "EF_SAK_SCOPE" to "api://dev-gcp.teamfamilie.familie-ef-sak/.default",
         ),
     )
