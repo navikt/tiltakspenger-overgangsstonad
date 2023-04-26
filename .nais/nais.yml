@@ -25,3 +25,7 @@ spec:
     pool: {{ kafka.pool }}
   secureLogs:
     enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{ urlEf }}
