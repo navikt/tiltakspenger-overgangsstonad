@@ -1,6 +1,6 @@
 val javaVersion = JavaVersion.VERSION_17
 val mockkVersion = "1.13.5"
-val ktorVersion = "2.3.0"
+val ktorVersion = "2.3.1"
 val jacksonVersion = "2.15.1"
 val kotlinxCoroutinesVersion = "1.7.1"
 val felleslibVersion = "0.0.32"
